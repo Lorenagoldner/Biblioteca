@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Grupo\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj": {}
+    "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Biblioteca\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Grupo\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj": {
+    "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Biblioteca\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Grupo\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj",
+        "projectUniqueName": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Biblioteca\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj",
         "projectName": "Biblioteca.ADONet",
-        "projectPath": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Grupo\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj",
+        "projectPath": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Biblioteca\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj",
         "packagesPath": "C:\\Users\\Lorena\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Grupo\\Biblioteca.ADONet\\obj\\",
+        "outputPath": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Biblioteca\\Biblioteca.ADONet\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

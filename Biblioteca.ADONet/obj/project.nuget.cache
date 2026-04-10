@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "0c2b65ej/7I=",
+  "dgSpecHash": "Rg83TusGE3w=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Grupo\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj",
+  "projectFilePath": "C:\\Users\\Lorena\\UPSKILL\\MOD03\\Trabalhos\\Biblioteca\\Biblioteca.ADONet\\Biblioteca.ADONet.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Lorena\\.nuget\\packages\\azure.core\\1.50.0\\azure.core.1.50.0.nupkg.sha512",
     "C:\\Users\\Lorena\\.nuget\\packages\\azure.identity\\1.17.1\\azure.identity.1.17.1.nupkg.sha512",
