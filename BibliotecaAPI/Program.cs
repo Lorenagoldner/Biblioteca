@@ -1,6 +1,7 @@
-using BibliotecaAPI.Models;
 //using BibliotecaAPI.Repositories;
 using Biblioteca.ADONet;
+using BibliotecaAPI.Models;
+using BibliotecaAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +10,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 Biblioteca.ADONet.DALPro.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+//builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 
 //adicionar aqui os services para os respositories
 
