@@ -2,5 +2,9 @@
 {
     public class TransferenciaDTO
     {
+        public int ObraID { get; set; }
+        public int NucleoOrigemID { get; set; }
+        public int NucleoDestinoID { get; set; }
+        public int Quantidade { get; set; }
     }
 }
