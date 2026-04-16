@@ -6,6 +6,7 @@ using BibliotecaAPI.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 //Configurações de Serviços
+//Teste de github
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
