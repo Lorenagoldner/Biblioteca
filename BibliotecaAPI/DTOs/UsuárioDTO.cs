@@ -8,16 +8,16 @@
         public int TipoUsuarioID { get; set; }
         public int StatusID { get; set; }
     }
-}
+}   
 
-
+  
 /*
-
+AAAAAAAAAAAAAAAA
 ERRO: propriedade não anulável (Email)
 👉 Isso vem do nullable reference types do C# (ativado por padrão)
 
 CORREÇÃO:
-Usar required para campos obrigatórios, e string.Empty para campos opcionais (que podem ser nulos)
+Usar required para campos obrigatórios, e string.Empty → evita valores nulos
 
 Dica importante ao usar required:
 👉 o Swagger depois já vai obrigar o preenchimento automaticamente
@@ -42,7 +42,7 @@ Dica importante ao usar required:
 
 ----------------------------------------------
 string?
-👉 só usar se realmente puder ser null
+👉 só usar se realmente puder ser null / permite null (opcional)
 
 
 ----------------------------------------------
@@ -88,7 +88,5 @@ string?
 ✔️ required → strings obrigatórias
 ✔️ ? → campos opcionais
 ✔️ nada → int, bool, DateTime
-
-
 
 */
