@@ -7,4 +7,3 @@
         public required string Morada { get; set; }
     }
 }
-    //b

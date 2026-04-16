@@ -7,4 +7,4 @@
         public required int TotalObras { get; set; }
     }
 }
-     
+

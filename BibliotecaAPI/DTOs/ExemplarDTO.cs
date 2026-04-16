@@ -8,4 +8,3 @@
         public bool Disponivel { get; set; }
     }   
 }
-  

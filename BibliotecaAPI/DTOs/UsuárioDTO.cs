@@ -12,7 +12,6 @@
 
   
 /*
-AAAAAAAAAAAAAAAA
 ERRO: propriedade não anulável (Email)
 👉 Isso vem do nullable reference types do C# (ativado por padrão)
 

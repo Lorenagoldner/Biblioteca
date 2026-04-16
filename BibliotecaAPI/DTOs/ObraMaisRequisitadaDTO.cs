@@ -6,4 +6,3 @@
         public required int TotalRequisicoes { get; set; }
     }
 }
-  

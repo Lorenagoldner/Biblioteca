@@ -65,6 +65,4 @@ Esse dado vem do sistema ou do usuário?
     Entrada → você exige qualidade
     Saída → pode refletir dados antigos/incompletos
 
-
-
 */   

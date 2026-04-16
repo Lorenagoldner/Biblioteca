@@ -10,3 +10,5 @@ namespace BibliotecaAPI.Models
         public string Descricao { get; set; } = string.Empty; //utilizando string.Empty para evitar nulls
     }
 }
+
+

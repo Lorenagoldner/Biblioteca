@@ -6,7 +6,6 @@
         public int ExemplarID { get; set; }     
     }
 }
-  //X
+
 // 👉 int NUNCA é nullável, então não tem sentido usar int? a menos que seja para um campo opcional
 // por isso é desnecessário usar int? para UsuarioID e ExemplarID, já que ambos são campos obrigatórios para criar um empréstimo.
- //erika

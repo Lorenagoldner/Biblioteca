@@ -6,6 +6,3 @@
         public int NucleoID { get; set; }
     }
 }
-
-//mN
-  
