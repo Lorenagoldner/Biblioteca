@@ -7,5 +7,3 @@
         public int TipoUsuarioID { get; set; }
     }
 }
-///aaaaaaaaaaaaaaaaaaa
-     //erika
