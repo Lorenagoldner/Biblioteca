@@ -1,6 +1,6 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class DisponibilidadeDTO
+    public class DisponibilidadeDTO  // DTO de saída - OUTPUT (sistema devolve)     // 👉 NÃO usar FK em DTO de saída
     {
         public required string Titulo { get; set; }
         public int Disponiveis { get; set; }

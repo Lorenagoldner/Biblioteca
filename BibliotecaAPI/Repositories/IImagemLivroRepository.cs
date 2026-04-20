@@ -8,8 +8,6 @@ namespace BibliotecaAPI.Repositories
         ImagemLivro GetById(int id);
         void NewImagemLivro(ImagemLivro imagemLivro);
         void UpdateImagemLivro(ImagemLivro imagemLivro);
-
         void DeleteById(int id);
-
     }
 }

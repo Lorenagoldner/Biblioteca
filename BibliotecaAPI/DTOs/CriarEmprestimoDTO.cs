@@ -1,6 +1,6 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class CriarEmprestimoDTO
+    public class CriarEmprestimoDTO  // DTO de entrada - INPUT (o que o utilizador envia)
     {
         public int UsuarioID { get; set; }
         public int ExemplarID { get; set; }     
