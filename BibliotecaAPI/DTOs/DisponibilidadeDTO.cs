@@ -8,3 +8,4 @@
 }
 
 // 👉 int NUNCA é nullável, então não tem sentido usar int? a menos que seja para um campo opcional
+    

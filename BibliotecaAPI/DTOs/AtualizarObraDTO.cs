@@ -7,4 +7,4 @@
         public int GeneroID { get; set; }
         public required string Descricao { get; set; }  
     }
-}
+}  

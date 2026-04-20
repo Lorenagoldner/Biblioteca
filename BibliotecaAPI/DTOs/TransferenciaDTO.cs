@@ -7,4 +7,5 @@
         public int NucleoDestinoID { get; set; }
         public int Quantidade { get; set; }
     }
-}
+}   
+  
