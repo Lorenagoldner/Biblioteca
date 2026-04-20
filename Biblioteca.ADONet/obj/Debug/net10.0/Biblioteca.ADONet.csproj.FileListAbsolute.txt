@@ -60,3 +60,16 @@ C:\Users\Lorena\UPSKILL\MOD03\Trabalhos\Biblioteca\Biblioteca.ADONet\obj\Debug\n
 C:\Users\Lorena\UPSKILL\MOD03\Trabalhos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\refint\Biblioteca.ADONet.dll
 C:\Users\Lorena\UPSKILL\MOD03\Trabalhos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.pdb
 C:\Users\Lorena\UPSKILL\MOD03\Trabalhos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\ref\Biblioteca.ADONet.dll
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\bin\Debug\net10.0\Biblioteca.ADONet.deps.json
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\bin\Debug\net10.0\Biblioteca.ADONet.dll
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\bin\Debug\net10.0\Biblioteca.ADONet.pdb
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.csproj.AssemblyReference.cache
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.AssemblyInfoInputs.cache
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.AssemblyInfo.cs
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.csproj.CoreCompileInputs.cache
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.sourcelink.json
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.dll
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\refint\Biblioteca.ADONet.dll
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\Biblioteca.ADONet.pdb
+C:\Users\amand\source\repos\Biblioteca\Biblioteca.ADONet\obj\Debug\net10.0\ref\Biblioteca.ADONet.dll

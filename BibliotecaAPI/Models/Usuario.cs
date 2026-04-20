@@ -8,6 +8,8 @@ namespace BibliotecaAPI.Models
         public int UsuarioID { get; set; }
         public string Nome { get; set; } = string.Empty; //utilizando string.Empty para evitar nulls
         public string Email { get; set; } = string.Empty;
+
+        public string Password { get; set; } = string.Empty;
         public DateTime DataInscricao { get; set; }
         public int TipoUsuarioID { get; set; }
         public int StatusID { get; set; }
