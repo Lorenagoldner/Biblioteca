@@ -480,3 +480,9 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+ 
+Biblioteca.ADONet/obj/Debug/net10.0/Biblioteca.ADONet.AssemblyInfo.cs
+Biblioteca.ADONet/obj/Debug/net10.0/Biblioteca.ADONet.AssemblyInfoInputs.cache
+Biblioteca.ADONet/obj/Debug/net10.0/Biblioteca.ADONet.GeneratedMSBuildEditorConfig.editorconfig
+Biblioteca.ADONet/obj/Debug/net10.0/Biblioteca.ADONet.assets.cache
+Biblioteca.ADONet/obj/Debug/net10.0/Biblioteca.ADONet.csproj.AssemblyReference.cache
