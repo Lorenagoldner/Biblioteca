@@ -12,7 +12,7 @@ namespace BibliotecaAPI.Repositories
 
             if (nucleoId.HasValue) //se o nucleoId for fornecido, adiciona a condição de filtro para o nucleoId
             {
-                sql += " AND NucleoID = @nid"; 
+                sql += " AND Nucleo = @nid"; 
                 parametros.Add("@nid", nucleoId.Value);
             }
             if (inicio.HasValue && fim.HasValue) //se as datas de inicio e fim forem fornecidas, adiciona a condição de filtro para o periodo de tempo entre a data de requisicao e a data de devolucao

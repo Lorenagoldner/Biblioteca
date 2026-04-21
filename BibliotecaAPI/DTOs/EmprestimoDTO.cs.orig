@@ -1,0 +1,34 @@
+﻿namespace BibliotecaAPI.DTOs
+{
+    public class EmprestimoDTO
+    {
+        public int EmprestimoID { get; set; }
+        public int UsuarioID { get; set; }
+        public int ExemplarID { get; set; }
+        public DateTime DataEmprestimo { get; set; }
+        public DateTime DataDevolucaoPrevista { get; set; }  // DataDevolucaoPrevista é calculada automaticamente no SQL (15 dias após o empréstimo)
+                                                             // Não é nullable porque sempre existe após a criação do empréstimo
+                                                             // É incluída no DTO pois faz parte da regra de negócio (controlo de prazos e atrasos)
+                                                             // 👉 Ela NÃO é nullable porque: sempre existe (é calculada); nunca vai ser null.
+        public DateTime? DataDevolucao { get; set; }
+        public bool? EntregaAtrasada { get; set; }
+    }
+<<<<<<< HEAD
+}
+
+=======
+}  
+  
+>>>>>>> Amanda
+
+/*
+ 
+🧠 Regra mental pra você nunca errar nisso:
+
+👉 Pergunta sempre:
+“Esse dado é importante mostrar?”
+✔️ sim → vai no DTO
+
+*** dados calculados → podem e devem ir para o DTO se forem úteis***
+
+*/
