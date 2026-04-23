@@ -35,14 +35,14 @@ namespace BibliotecaAPI.Services
                 Email = dto.Email,
                 DataInscricao = DateTime.Now,
                 TipoUsuarioID = dto.TipoUsuarioID,
-                StatusID = 1,
+                StatusID = 1, // ativo
                 Password = dto.Password
             };
 
             _repo.Add(usuario);
         }
 
-        // cria leitor (força tipo = leitor)
+        // cria leitor (força tipo = utilizador)
         public void CriarLeitor(CriarUsuarioDTO dto)
         {
             dto.TipoUsuarioID = 1;
@@ -75,7 +75,7 @@ namespace BibliotecaAPI.Services
             _repo.Update(id, user);
         }
 
-        // cancela usuário (soft delete)
+        // cancela usuário
         public void Cancelar(int id)
         {
             var user = _repo.GetById(id);
@@ -87,19 +87,40 @@ namespace BibliotecaAPI.Services
         }
 
         // lista todos
-        public List<Usuario> GetAll()
+        public List<UsuarioOutputDTO> GetAll()
         {
-            return _repo.GetAll();
+            var usuarios = _repo.GetAll();
+
+            return usuarios.Select(u => new UsuarioOutputDTO
+            {
+                UsuarioID = u.UsuarioID,
+                Nome = u.Nome,
+                Email = u.Email,
+                TipoUsuario = u.TipoUsuarioID == 2 ? "Admin" : "Utilizador",
+                Status = u.StatusID == 1 ? "Ativo" : "Suspenso"
+            }).ToList();
         }
 
         // busca por id
-        public Usuario GetById(int id)
+        public UsuarioOutputDTO GetById(int id)
         {
-            return _repo.GetById(id);
+            var u = _repo.GetById(id);
+
+            if (u == null)
+                return null;
+
+            return new UsuarioOutputDTO
+            {
+                UsuarioID = u.UsuarioID,
+                Nome = u.Nome,
+                Email = u.Email,
+                TipoUsuario = u.TipoUsuarioID == 2 ? "Admin" : "Utilizador",
+                Status = u.StatusID == 1 ? "Ativo" : "Suspenso"
+            };
         }
 
         // login
-        public Usuario Login(LoginDTO dto)
+        public UsuarioOutputDTO Login(LoginDTO dto)
         {
             if (string.IsNullOrEmpty(dto.Email) || string.IsNullOrEmpty(dto.Password))
                 throw new Exception("Email e password obrigatórios");
@@ -112,7 +133,14 @@ namespace BibliotecaAPI.Services
             if (user.Password != dto.Password)
                 throw new Exception("Password inválida");
 
-            return user;
+            return new UsuarioOutputDTO
+            {
+                UsuarioID = user.UsuarioID,
+                Nome = user.Nome,
+                Email = user.Email,
+                TipoUsuario = user.TipoUsuarioID == 2 ? "Admin" : "Utilizador",
+                Status = user.StatusID == 1 ? "Ativo" : "Suspenso"
+            };
         }
     }
 }
