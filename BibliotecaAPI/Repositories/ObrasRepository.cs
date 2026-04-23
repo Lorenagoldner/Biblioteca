@@ -62,6 +62,7 @@ namespace BibliotecaAPI.Repositories
 
         public void Update(Obras obra)
         {     
+
             if (obra.GeneroID <= 0)
                 throw new Exception("Genero obrigatório");
 
@@ -104,6 +105,5 @@ namespace BibliotecaAPI.Repositories
                 { "@titulo", texto }
             });
         }
-
     }
 }

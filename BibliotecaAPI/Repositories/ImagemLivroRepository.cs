@@ -14,7 +14,7 @@ namespace BibliotecaAPI.Repositories
 
         public ImagemLivro GetById(int id)
         {
-            string sql = "SELECT * FROM ImagemLivro WHERE ObraID = @id";
+            string sql = "SELECT * FROM ImagemLivro WHERE ObrasID = @id";
 
             var result = DALPro.Query<ImagemLivro>(sql,
                 new Dictionary<string, object>
@@ -27,7 +27,7 @@ namespace BibliotecaAPI.Repositories
 
         public void NewImagemLivro(ImagemLivro imagemLivro)
         {
-            string sql = @"INSERT INTO ImagemLivro (ObraID, Imagem)
+            string sql = @"INSERT INTO ImagemLivro (ObrasID, Imagem)
                            VALUES (@ObraID, @Imagem)";
 
             DALPro.Execute(sql, new Dictionary<string, object>
@@ -38,19 +38,29 @@ namespace BibliotecaAPI.Repositories
         }
 
 
-        public void UpdateImagemLivro(ImagemLivro imagemLivro)
+
+        public void AtualizarImagem(int obraId, byte[] imagem)
         {
-            string sql = @"UPDATE ImagemLivro
-                           SET Imagem = @Imagem
-                           WHERE ObrasID = @ObrasID";
+            string sql = @"
+                        IF EXISTS (SELECT 1 FROM ImagemLivro WHERE ObrasID = @ObraID)
+                        BEGIN
+                            UPDATE ImagemLivro
+                            SET Imagem = @Imagem
+                            WHERE ObrasID = @ObraID
+                        END
+                        ELSE
+                        BEGIN
+                            INSERT INTO ImagemLivro (ObrasID, Imagem)
+                            VALUES (@ObraID, @Imagem)
+                        END
+                    ";
 
             DALPro.Execute(sql, new Dictionary<string, object>
             {
-                { "@ObrasID", imagemLivro.ObrasID },
-                { "@Imagem", imagemLivro.Imagem }
+                { "@Imagem", imagem },
+                { "@ObraID", obraId }
             });
         }
-
 
         public void DeleteById(int id)
         {

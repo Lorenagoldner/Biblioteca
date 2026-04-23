@@ -10,7 +10,5 @@ namespace BibliotecaAPI.Models
         public byte[]? Imagem { get; set; } // 1 imagem por obra 
 
         //public int ImagemLivroID { get; set; } // PK - várias imagens por obra, ID próprio da imagem.
- 
-
     }
 }

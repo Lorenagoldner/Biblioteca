@@ -37,6 +37,7 @@ namespace BibliotecaAPI.Repositories
             });
         }
 
+
         public void UpdateNucleo(Nucleo nucleo)
         {
             string sql = @"UPDATE Nucleo 
@@ -52,6 +53,7 @@ namespace BibliotecaAPI.Repositories
             });
         }
 
+
         public void DeleteNucleo(int id)
         {
             string sql = "DELETE FROM Nucleo WHERE ID = @id";
@@ -60,6 +62,19 @@ namespace BibliotecaAPI.Repositories
             {
                 { "@id", id }
             });
+        }
+
+
+        public bool Exists(int nucleoId)
+        {
+            string sql = "SELECT COUNT(1) FROM Nucleo WHERE ID = @id";
+
+            var result = DALPro.ExecuteScalar(sql, new Dictionary<string, object>
+            {
+                { "@id", nucleoId }
+            });
+
+            return Convert.ToInt32(result) > 0;
         }
     }
 }

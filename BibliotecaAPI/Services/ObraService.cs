@@ -11,8 +11,8 @@ namespace BibliotecaAPI.Services
         private readonly IObrasRepository _repo;
         private readonly IExemplaresRepository _exemplaresRepo;
         private readonly INucleoRepository _nucleoRepo;
-        private readonly IGeneroRepository _generoRepo; 
-
+        private readonly IGeneroRepository _generoRepo;
+        private readonly IImagemLivroService _imagemService;
 
         // Cosntrutor para injetar os repositórios correspondentes:
         public ObraService(IObrasRepository repo, IExemplaresRepository exemplaresRepo, INucleoRepository nucleoRepo, IGeneroRepository generoRepo)
@@ -29,7 +29,7 @@ namespace BibliotecaAPI.Services
 
 
         // ObraDTO: OUTPUT - DTO de saída (sistema devolve - vai para o utilizador).
-        public List<ObraDTO> GetAll()
+        public object GetAll()
         {
             var obras = _repo.GetAll();
 
@@ -43,17 +43,22 @@ namespace BibliotecaAPI.Services
                 | GET   | Model → DTO |
                 | POST  | DTO → Model |
             */
-            return obras.Select(o => new ObraDTO  // *** uso do SELECT para converter cada obra do banco (Model), obras = lista, precisa converter cada item, em um ObraDTO (DTO de saída).
-                                                  // *** GetById(): NÃO precisa de SELECT, porque é apenas 1 item (objeto), não uma lista.
+
+            if (obras == null || obras.Count == 0)
+                return new { message = "Nenhuma obra encontrada" };
+
+            return obras.Select(o => new ObraDTO   // *** uso do SELECT para converter cada obra do banco (Model), obras = lista, precisa converter cada item, em um ObraDTO (DTO de saída).
+                                                   // *** GetById(): NÃO precisa de SELECT, porque é apenas 1 item (objeto), não uma lista.
             {
                 ObraID = o.ObraID,
                 Titulo = o.Titulo,
                 Autor = o.Autor,
-                Genero = o.GeneroID.ToString(), // depois melhora com JOIN
+                Genero = o.GeneroID.ToString(),
                 Descricao = o.Descricao,
                 ISBN = o.ISBN
             }).ToList();
         }
+
 
 
         // ObraDTO: OUTPUT - DTO de saída (sistema devolve - vai para o utilizador).
@@ -62,7 +67,8 @@ namespace BibliotecaAPI.Services
             var o = _repo.GetById(id);
 
             if (o == null)
-                throw new Exception("Obra não encontrada");
+                return null;
+
 
             return new ObraDTO // *** GetById(): NÃO precisa de SELECT, porque é apenas 1 item (objeto), não uma lista.
             {
@@ -146,37 +152,36 @@ namespace BibliotecaAPI.Services
         // DTO de saída - OUTPUT (sistema devolve - vai para o utilizador)
         public List<ObraDetalhadaDTO> GetObrasDetalhadas()
         {
-        var obras = _repo.GetAll();
-        var exemplares = _exemplaresRepo.GetAll();
-        var nucleos = _nucleoRepo.GetAllNucleos();
+            var obras = _repo.GetAll();
+            var exemplares = _exemplaresRepo.GetAll();
+            var nucleos = _nucleoRepo.GetAllNucleos();
 
-        return obras.Select(o =>
-        {
-            var exemplaresObra = exemplares.Where(e => e.ObraID == o.ObraID).ToList();
-
-            var nucleo = exemplaresObra.FirstOrDefault() != null
-                ? nucleos.FirstOrDefault(n => n.ID == exemplaresObra.First().NucleoID)
-                : null;
-
-            return new ObraDetalhadaDTO
+            return obras.Select(o =>
             {
-                ObraID = o.ObraID,
-                Titulo = o.Titulo,
-                Autor = o.Autor,
-                Genero = o.GeneroID.ToString(),
-                Descricao = o.Descricao,
-                ISBN = o.ISBN,
-                Nucleo = nucleo?.Nome,
-                TotalExemplares = exemplaresObra.Count
-            };
+                var exemplaresObra = exemplares.Where(e => e.ObraID == o.ObraID).ToList();
+
+                var nucleo = exemplaresObra.FirstOrDefault() != null
+                    ? nucleos.FirstOrDefault(n => n.ID == exemplaresObra.First().NucleoID)
+                    : null;
+
+                return new ObraDetalhadaDTO
+                {
+                    ObraID = o.ObraID,
+                    Titulo = o.Titulo,
+                    Autor = o.Autor,
+                    Genero = o.GeneroID.ToString(),
+                    Descricao = o.Descricao,
+                    ISBN = o.ISBN,
+                    Nucleo = nucleo?.Nome,
+                    TotalExemplares = exemplaresObra.Count
+                };
             }).ToList();
         }
-
 
         public List<PesquisaObraDTO> PesquisarObra(string texto)
         {
             return _repo.PesquisarObra(texto);
-        }
+        }         
 
     }
  }
