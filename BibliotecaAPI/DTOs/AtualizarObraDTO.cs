@@ -1,10 +1,70 @@
-﻿namespace BibliotecaAPI.DTOs
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace BibliotecaAPI.DTOs
 {
-    public class AtualizarObraDTO
+    public class AtualizarObraDTO  // DTO de entrada - INPUT (o que o utilizador envia)
     {
         public required string Titulo { get; set; }  
         public required string Autor { get; set; }
         public int GeneroID { get; set; }
-        public required string Descricao { get; set; }  
+        public string Descricao { get; set; } = string.Empty;
     }
-}  
+}
+
+
+// -------------------------------------------------------- //
+// 🧠 DTOs – entendimento correto:
+
+// Existem dois tipos principais:
+
+// 1️- DTO de entrada (Create / Update)
+// 👉 Recebe dados do utilizador (frontend → API)
+// 👉 Não retorna nada do sistema
+// 👉 Ex: CriarObraDTO, CriarEmprestimoDTO
+
+// 2️- DTO de saída (Response / Display)
+// 👉 Mostra dados já tratados do sistema para o utilizador
+// 👉 Pode conter dados "bonitos" (ex: nome do género, nome do núcleo)
+// 👉 NÃO deve expor IDs desnecessários (FKs)
+
+// ❌ Errado: mostrar apenas IDs (ex: GeneroID)
+// ✔️ Correto: mostrar informação útil (ex: Genero = "Romance")
+
+// 👉 Regra de ouro:
+// "O utilizador não vê o banco de dados, vê informação compreensível"
+
+
+
+// -------------------------------------------------------- //
+// 🧠 REGRA DE OURO SOBRE DTOs:
+
+// DTO NÃO é o banco
+// DTO é o que o sistema quer mostrar
+
+// ✔ Pode expor:
+// - ID da própria entidade (ex: ObraID)
+// - Dados úteis para o frontend (Nome, Título, etc)
+
+// ❌ Evitar:
+// - FKs técnicas sem significado (GeneroID, NucleoID)
+
+// ✔ Preferir:
+// - Dados traduzidos (Genero, NomeNucleo)
+
+// 👉 Expor FK não é proibido,
+// mas deve fazer sentido para quem consome a API.
+
+
+
+// -------------------------------------------------------- //
+// AFIRMATIVA: DTO não acessa o banco, é por consequência uma “camada de segurança”
+// - DTO não fala com o banco diretamente;
+// - Quem fala com o banco é o Repository;
+// - O DTO serve para:
+// - controlar o que entra;
+// - controlar o que sai;
+// - proteger a estrutura interna (Models).
+//👉 Ou seja:
+//✔ Segurança
+//✔ Organização
+//✔ Separação de responsabilidades

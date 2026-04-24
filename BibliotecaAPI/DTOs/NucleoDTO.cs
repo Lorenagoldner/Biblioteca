@@ -1,6 +1,6 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class NucleoDTO
+    public class NucleoDTO  
     {
         public int ID { get; set; }
         public required string Nome { get; set; }

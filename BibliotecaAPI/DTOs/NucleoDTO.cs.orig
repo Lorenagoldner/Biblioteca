@@ -1,0 +1,13 @@
+﻿namespace BibliotecaAPI.DTOs
+{
+    public class NucleoDTO  // DTO de saída - OUTPUT (sistema devolve)
+    {
+        public int ID { get; set; }
+        public required string Nome { get; set; }
+<<<<<<< HEAD
+        public required string Morada { get; set; }
+=======
+        public string? Morada { get; set; }
+>>>>>>> Obras_Exemplares_Nucleo_Img
+    }
+}

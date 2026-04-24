@@ -9,5 +9,7 @@ namespace BibliotecaAPI.Models
         public int ObraID { get; set; }
         public int NucleoID { get; set; }
         public bool Disponivel { get; set; }
+        public Obras? Obra { get; set; }  // RELAÇÕES para navegação (objetos relacionados) -  NÃO existe na tabela do SQL
+        public Nucleo? Nucleo { get; set; }  // RELAÇÕES para navegação (objetos relacionados) -  NÃO existe na tabela do SQL
     }
 }
