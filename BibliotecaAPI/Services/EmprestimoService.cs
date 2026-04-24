@@ -33,7 +33,7 @@ namespace BibliotecaAPI.Services
                 ExemplarID = exemplarId
             };
 
-            _emprestimoRepo.NewEmprestimo(novoEmprestimo); //
+            _emprestimoRepo.NewEmprestimo(novoEmprestimo); 
         }
 
         //DEVOLUÇÃO + GERAÇÃO DE HISTÓRICO

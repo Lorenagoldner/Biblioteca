@@ -10,24 +10,11 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-// 🔧 REGISTRO DE DEPENDÊNCIAS (Dependency Injection)
-//
-// 👉 Estamos dizendo ao .NET:
-// "Sempre que alguém pedir IObrasRepository,
-// entregue uma instância de ObrasRepository"
-//
-// ✔ Isso permite que o Service receba o Repository automaticamente
-// ✔ Sem isso, a aplicação NÃO sabe como criar o objeto
-// ❌ Resultado sem isso: erro em runtime (Cannot resolve service)
-
-
 // Configurações de Serviços
-//Teste de github
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-//ADD erika
+
 builder.Services.AddScoped<IObraService, ObraService>();
 builder.Services.AddScoped<IObrasRepository, ObrasRepository>();
 
@@ -46,21 +33,14 @@ builder.Services.AddScoped<IEstatisticasP2Service, EstatisticasP2Service>();
 builder.Services.AddScoped<IImagemLivroService, ImagemLivroService>();
 builder.Services.AddScoped<IImagemLivroRepository, ImagemLivroRepository>();
 
-// AppDbContext (na pasta Data) não é utilizado neste projeto,
-// pois a aplicação utiliza DALPro (ADO.NET) para acesso direto à base de dados.
-// Entity Framework não está implementado aqui.
-
-
 Biblioteca.ADONet.DALPro.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-?? throw new Exception("Connection string não encontrada.");  // 2. ERRO: Possible null (ConnectionString): Problema: GetConnectionString pode retornar null
-
+?? throw new Exception("Connection string não encontrada."); 
 
 builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
 builder.Services.AddScoped<IEmprestimoRepository, EmprestimoRepository>();
 builder.Services.AddScoped<IHistoricoRepository, HistoricoRepository>();
 builder.Services.AddScoped<EstatisticasRepository>();
 
-//adicionar aqui os services para os respositories
 builder.Services.AddScoped<LeitorService>();
 builder.Services.AddScoped<EmprestimoService>();
 builder.Services.AddScoped<EstatisticasService>();
@@ -78,9 +58,7 @@ if (app.Environment.IsDevelopment())
 app.UseRouting();
 
 
-//Endpoints:
-
-//------------------------------ Endpoints para Obras ------------------------------//
+//Endpoints para Obras
 
 app.MapGet("/api/obras/buscar", (IObraService service) =>
 {
@@ -101,7 +79,7 @@ app.MapGet("/api/obras/buscar/{id}", (int id, IObraService service) =>
 
 app.MapPost("/api/obras/criar", (CriarObraDTO dto, IObraService service) =>
 {
-    var id = service.Add(dto); // 👈 tem de devolver ID
+    var id = service.Add(dto);
 
     return Results.Created($"/api/obras/{id}", new
     {
@@ -133,11 +111,31 @@ app.MapGet("/api/obras/detalhadas", (IObraService service) =>
 
 app.MapGet("/api/obras/pesquisa", (string texto, IObraService service) =>
 {
-    return Results.Ok(service.PesquisarObra(texto));
+var resultado = service.PesquisarObra(texto);
+
+
+if (resultado == null || !resultado.Any())
+
+{
+
+    return Results.NotFound(new
+    {
+
+        mensagem = "Nenhuma obra encontrada"
+    });
+
+}
+
+
+return Results.Ok(new
+{
+
+    mensagem = "Obra(s) encontrada(s) com sucesso"
 });
 
+});
 
-// ----------------------- Endpoints para Exemplares ------------------------//
+//Endpoints para Exemplares
 
 app.MapGet("/api/exemplares/buscar", (IExemplaresService service) =>
 {
@@ -200,8 +198,7 @@ app.MapPut("/api/exemplares/{id}/indisponibilizar", (int id, IExemplaresService 
 });
 
 
-
-// ----------------------- Endpoints para Nucleos ------------------------//
+//Endpoints para Núcleos
 app.MapGet("/api/nucleos/{id}", (int id, INucleoRepository repo) =>
 {
     var nucleo = repo.GetNucleoById(id);
@@ -252,7 +249,6 @@ app.MapDelete("/api/nucleos/{id}", (int id, INucleoService service) =>
 });
 
 
-// E ver exatamente/detalhado o que existe naquele núcleo.
 app.MapGet("/api/exemplares/nucleo/{id}", (int id, IExemplaresService service) =>
 {
     var result = service.GetByNucleo(id);
@@ -260,7 +256,6 @@ app.MapGet("/api/exemplares/nucleo/{id}", (int id, IExemplaresService service) =
 });
 
 
-// E ver o TOTAL o que existe naquele núcleo.
 app.MapGet("/api/exemplares/nucleo/{id}/por-obra", (int id, IExemplaresService service) =>
 {
     var result = service.GetByNucleo(id);
@@ -277,32 +272,7 @@ app.MapGet("/api/exemplares/nucleo/{id}/por-obra", (int id, IExemplaresService s
     return Results.Ok(resumo);
 });
 
-
-// OBSs SOBRE A RELAÇÃO Endpoints para Nucleos: 2 e 3:
-
-// 🔎 RESUMO IMPORTANTE SOBRE ESTE ENDPOINT (/resumo)
-//
-// Este endpoint NÃO cria nova lógica de negócio nem faz novas queries à base de dados.
-// Ele reutiliza o método já existente "GetByNucleo", que já devolve todos os exemplares
-// de um núcleo com as respetivas relações (Obra e Núcleo).
-//
-// A única responsabilidade deste endpoint é TRANSFORMAR os dados já obtidos,
-// agrupando-os por ObraID e calculando a quantidade de exemplares por obra.
-//
-// ✔ Isto evita duplicação de código (reutilização de service/repository)
-// ✔ Mantém a regra de acesso à BD centralizada
-// ✔ Permite múltiplas formas de apresentação dos mesmos dados
-//
-// Em termos de arquitetura:
-// - Repository → acesso à base de dados
-// - Service → regras de negócio
-// - Endpoint → apenas formatação/retorno da resposta
-//
-// 💡 Conclusão: o mesmo conjunto de dados pode (e deve) ser reutilizado
-// para diferentes necessidades sem criar novas queries desnecessárias.
-
-
-//----------------------- Endpoint de teste de upload-imagem ------------------------ //
+//Endpoints para Imagens de Obras
 app.MapPost("/api/obras/{obraId}/imagem",
 (int obraId, IFormFile file, IImagemLivroService service) =>
 {
@@ -333,41 +303,6 @@ app.MapGet("/api/obras/{obraId}/imagem",
     // return Results.File(img.Imagem, "image/jpeg", $"obra_{obraId}.jpg");
 });
 
-
-
-// ----------------------- Endpoint de teste de Estatísticas ------------------------//
-//app.MapGet("/api/stats/top-obras",
-
-//    (DateTime dataInicio, DateTime dataFim, IEstatisticasP2Service service) =>
-//    {
-//        return Results.Ok(service.TopObras(dataInicio, dataFim));
-//    })
-//.WithDescription("Formato das datas: yyyy-MM-dd (ex: 2026-01-01)");
-
-
-
-//app.MapGet("/api/stats/nucleos",
-//    (DateTime dataInicio, DateTime dataFim, IEstatisticasP2Service service) =>
-//    {
-//        return Results.Ok(service.Nucleos(dataInicio, dataFim));
-//    })
-//.WithDescription("Formato das datas: yyyy-MM-dd (ex: 2026-01-01)");
-
-
-
-//app.MapGet("/api/stats/generos", (IEstatisticasP2Service service) =>
-//{
-//    return Results.Ok(service.Generos());
-//});
-
-
-
-//----------------------- Endpoint de teste de conexão ------------------------ //
-
-//criei só pra verificar se estava tudo ok, pode apagar
-app.MapGet("/status-conexao", () => {
-    return Results.Ok(new { mensagem = "API conectada ao DALPro com sucesso!" });
-});
 
 //Endpoint para criar um leitor (pode ser adaptado para criar outros tipos de usuários)
 app.MapGet("/usuarios", (LeitorService service) =>
@@ -412,7 +347,6 @@ app.MapPost("/login", (LoginDTO dto, LeitorService service) =>
 //Endpoint para verificar a situação detalhada do leitor (
 app.MapGet("/emprestimos/situacao/{usuarioId}", (int usuarioId, EmprestimoService service) =>
 {
-    // Agora o service já entrega a lista prontinha!
     return Results.Ok(service.ConsultarSituacaoDetalhada(usuarioId));
 });
 
@@ -455,36 +389,6 @@ app.MapPut("/emprestimos/devolucao/{emprestimoId}", (int emprestimoId, Emprestim
         return Results.BadRequest($"Erro ao processar devolução: {ex.Message}");
     }
 });
-
-//Estatisticas
-
-app.MapGet("/estatisticas/resumo", (EstatisticasService service) =>
-{
-    try
-    {
-        var resumo = service.ObterResumoGeral();
-        return Results.Ok(resumo);
-    }
-    catch (Exception ex)
-    {
-        return Results.BadRequest($"Erro ao obter resumo: {ex.Message}");
-    }
-});
-
-
-app.MapGet("/estatisticas/top10-mes-anterior", (EstatisticasService service) =>
-{
-    try
-    {
-        var top10 = service.ObterTop10MesAnterior();
-        return Results.Ok(top10);
-    }
-    catch (Exception ex)
-    {
-        return Results.BadRequest($"Erro ao obter ranking do mês anterior: {ex.Message}");
-    }
-});
-
 
 // buscar usuario por id
 app.MapGet("/usuarios/{id}", (int id, LeitorService service) =>
@@ -546,4 +450,54 @@ app.MapDelete("/usuarios/{id}", (int id, LeitorService service) =>
     }
 });
 
+//Estatisticas
+
+app.MapGet("/estatisticas/resumo", (EstatisticasService service) =>
+{
+    try
+    {
+        var resumo = service.ObterResumoGeral();
+        return Results.Ok(resumo);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest($"Erro ao obter resumo: {ex.Message}");
+    }
+});
+
+
+app.MapGet("/estatisticas/top10-mes-anterior", (EstatisticasService service) =>
+{
+    try
+    {
+        var top10 = service.ObterTop10MesAnterior();
+        return Results.Ok(top10);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest($"Erro ao obter ranking do mês anterior: {ex.Message}");
+    }
+});
+
+app.MapGet("/api/stats/top-obras",
+
+    (DateTime dataInicio, DateTime dataFim, IEstatisticasP2Service service) =>
+    {
+        return Results.Ok(service.TopObras(dataInicio, dataFim));
+    })
+.WithDescription("Formato das datas: yyyy-MM-dd (ex: 2026-01-01)");
+
+
+app.MapGet("/api/stats/nucleos",
+    (DateTime dataInicio, DateTime dataFim, IEstatisticasP2Service service) =>
+    {
+        return Results.Ok(service.Nucleos(dataInicio, dataFim));
+    })
+.WithDescription("Formato das datas: yyyy-MM-dd (ex: 2026-01-01)");
+
+
+app.MapGet("/api/stats/generos", (IEstatisticasP2Service service) =>
+{
+    return Results.Ok(service.Generos());
+});
 app.Run();

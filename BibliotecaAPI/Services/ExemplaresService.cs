@@ -22,7 +22,7 @@ namespace BibliotecaAPI.Services
         }
 
 
-        // --------------------- MÉTODOS --------------------- //
+        //METODO
         public List<ExemplarJoinDTO> GetAll()
         {
             return _repo.GetAll(); 
@@ -100,23 +100,16 @@ namespace BibliotecaAPI.Services
             if (nucleoDestino == null)
                 throw new Exception("Núcleo destino não existe");
 
-            // 🚨 Evitar transferir para o mesmo núcleo
             if (nucleoOrigem == nucleoDestinoId)
                 throw new Exception("O exemplar já está neste núcleo");
 
-
-            // 🚨 REGRA DE NEGÓCIO:
-            // Contar quantos exemplares dessa obra existem no núcleo de origem
-            // - Se tiver 2 → NÃO pode sair nenhum.
-            // - Se tiver 3 → pode sair 1(fica 2).
             int totalNoNucleo = _repo.ContarExemplares(obraId, nucleoOrigem);
 
             Console.WriteLine($"DEBUG: totalNoNucleo = {totalNoNucleo}");
 
-            if (totalNoNucleo - 1 < 2)    // “depois de remover 1 exemplar, ainda tem de ficar pelo menos 2”
+            if (totalNoNucleo - 1 < 2)  
                 throw new Exception("Não é possível transferir. O núcleo deve manter pelo menos 2 exemplares desta obra.");
 
-            // 4. Transferir
             _repo.AlterNucleo(exemplarId, nucleoDestinoId);      
         }
 
