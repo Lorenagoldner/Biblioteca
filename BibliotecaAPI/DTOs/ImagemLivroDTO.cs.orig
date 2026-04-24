@@ -1,13 +1,14 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class ImagemLivroDTO
+    public class ImagemLivroDTO  // DTO de saída - OUTPUT (sistema devolve)
     {
+<<<<<<< HEAD
         public int ObrasID { get; set; }
         public required byte[] Imagem { get; set; }
-    }
-<<<<<<< HEAD
-}
 =======
+        public int ObraID { get; set; }
+        public string? Url { get; set; }
+>>>>>>> Obras_Exemplares_Nucleo_Img
+    }
 }  
   
->>>>>>> Amanda
