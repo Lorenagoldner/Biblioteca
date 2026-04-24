@@ -160,4 +160,64 @@ app.MapGet("/estatisticas/top10-mes-anterior", (EstatisticasService service) =>
 });
 
 
+// buscar usuario por id
+app.MapGet("/usuarios/{id}", (int id, LeitorService service) =>
+{
+    try
+    {
+        var user = service.GetById(id);
+
+        if (user == null)
+            return Results.NotFound("Usuário não encontrado");
+
+        return Results.Ok(user);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+});
+
+// suspender usuario
+app.MapPut("/usuarios/{id}/suspender", (int id, LeitorService service) =>
+{
+    try
+    {
+        service.Suspender(id);
+        return Results.Ok("Usuário suspenso");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+});
+
+// reativar usuario
+app.MapPut("/usuarios/{id}/reativar", (int id, LeitorService service) =>
+{
+    try
+    {
+        service.Reativar(id);
+        return Results.Ok("Usuário reativado");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+});
+
+// cancelar usuario
+app.MapDelete("/usuarios/{id}", (int id, LeitorService service) =>
+{
+    try
+    {
+        service.Cancelar(id);
+        return Results.Ok("Usuário cancelado");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+});
+
 app.Run();
