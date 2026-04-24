@@ -82,6 +82,7 @@ app.MapPost("/login", (LoginDTO dto, LeitorService service) =>
     }
 });
 
+<<<<<<< HEAD
 
 //Endpoint para verificar a situação detalhada do leitor (
 app.MapGet("/emprestimos/situacao/{usuarioId}", (int usuarioId, EmprestimoService service) =>
@@ -104,6 +105,19 @@ app.MapPost("/emprestimos/requisicao", (int usuarioId, int exemplarId, Emprestim
     {
         service.RequisitarLivro(usuarioId, exemplarId);
         return Results.Ok("Requisição efetuada com sucesso!");
+=======
+// buscar usuario por id
+app.MapGet("/usuarios/{id}", (int id, LeitorService service) =>
+{
+    try
+    {
+        var user = service.GetById(id);
+
+        if (user == null)
+            return Results.NotFound("Usuário não encontrado");
+
+        return Results.Ok(user);
+>>>>>>> Amanda
     }
     catch (Exception ex)
     {
@@ -111,6 +125,7 @@ app.MapPost("/emprestimos/requisicao", (int usuarioId, int exemplarId, Emprestim
     }
 });
 
+<<<<<<< HEAD
 //Endpoint para devolução de livro
 app.MapPut("/emprestimos/devolucao/{emprestimoId}", (int emprestimoId, EmprestimoService service) =>
 {
@@ -160,24 +175,7 @@ app.MapGet("/estatisticas/top10-mes-anterior", (EstatisticasService service) =>
 });
 
 
-// buscar usuario por id
-app.MapGet("/usuarios/{id}", (int id, LeitorService service) =>
-{
-    try
-    {
-        var user = service.GetById(id);
-
-        if (user == null)
-            return Results.NotFound("Usuário não encontrado");
-
-        return Results.Ok(user);
-    }
-    catch (Exception ex)
-    {
-        return Results.BadRequest(ex.Message);
-    }
-});
-
+=======
 // suspender usuario
 app.MapPut("/usuarios/{id}/suspender", (int id, LeitorService service) =>
 {
@@ -220,4 +218,5 @@ app.MapDelete("/usuarios/{id}", (int id, LeitorService service) =>
     }
 });
 
+>>>>>>> Amanda
 app.Run();
