@@ -1,12 +1,18 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class UsuárioDTO
+    public class UsuarioDTO  // DTO de saída - OUTPUT (sistema devolve)
     {
         public int UsuarioID { get; set; }
         public required string Nome { get; set; }  // required: Isso obriga, quem criar o objeto a preencher
         public required string Email { get; set; }
-        public int TipoUsuarioID { get; set; }
-        public int StatusID { get; set; }
+        public string? TipoUsuario { get; set; }
+        public string? Status { get; set; }
+
+        // ❌ não expor FK na saída:
+        // *** Está alinhado com “DTO inteligente” ***
+        // public int TipoUsuarioID { get; set; }  // FK para TipoUsuario
+        // public int StatusID { get; set; }       // FK para Status
+
     }
 }   
 
@@ -64,8 +70,8 @@ string?
     int, bool, DateTime
 
         👉 Esses NUNCA são null por padrão:
-        int → começa como 0
-        bool → começa como false
+        int → começa como 0.
+        bool → começa como false.
 
         💡 Por isso:
         public int GeneroID { get; set; }
@@ -77,7 +83,7 @@ string?
     ⚠️ Tipos de referência:
     string, byte[], objetos
 
-        👉 Esses PODEM ser null
+        👉 Esses PODEM ser null.
 
 
 ----------------------------------------------

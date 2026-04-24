@@ -8,7 +8,7 @@ namespace BibliotecaAPI.Models
         public int HistoricoID { get; set; }
         public string? Requisicao { get; set; }
         public string? Nucleo { get; set; }
-        public DateTime? DataRequisicao { get; set; }
-        public DateTime? DataDevolucao { get; set; }
+        public DateTime DataRequisicao { get; set; }
+        public DateTime DataDevolucao { get; set; }
     }
 }

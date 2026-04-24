@@ -7,6 +7,8 @@ namespace BibliotecaAPI.Models
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.None)] //utilizado para indicar que esta propriedade é a chave primária da tabela e que o valor não é gerado automaticamente
         public int StatusID { get; set; }
-        public string Descricao { get; set; } = string.Empty; //utilizando string.Empty para evitar nulls
+        public string Descricao { get; set; } = null!; 
     }
 }
+
+

@@ -6,7 +6,7 @@ namespace Biblioteca.ADONet
 {
     public static class DALPro //Classe estática, não preicsa criar uma instância. Todos os métodos e propriedades dentro dela são acessados diretamente pelo nome da classe: DALPro.GetConnection()
     {
-        public static string ConnectionString; //Campo público e estático que guarda a string de conexão com o banco de dados
+        public static string? ConnectionString { get; set; } //Campo público e estático que guarda a string de conexão com o banco de dados
 
         private static readonly Dictionary<Type, PropertyInfo[]> _cacheProps = //_cacheProps é um dicionário privado e somente leitura
             new Dictionary<Type, PropertyInfo[]>();//Chave(Type) é o tipo de classe que está sendo mapeado(ex: employee), valor(PropertyInfo) é um array das propriedades desse tipo

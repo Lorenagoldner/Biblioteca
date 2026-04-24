@@ -18,5 +18,5 @@ namespace BibliotecaAPI.Models
         public DateTime DataDevolucaoPrevista { get; private set; }
     }
 
-  
+
 }

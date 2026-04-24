@@ -9,6 +9,6 @@ namespace BibliotecaAPI.Repositories
         void AddNucleo(Nucleo nucleo);
         void UpdateNucleo(Nucleo nucleo);
         void DeleteNucleo(int id);
-
+        public bool Exists(int nucleoId);
     }
 }

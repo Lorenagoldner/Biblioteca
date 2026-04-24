@@ -13,5 +13,7 @@ namespace BibliotecaAPI.Models
         public DateTime DataInscricao { get; set; }
         public int TipoUsuarioID { get; set; }
         public int StatusID { get; set; }
+        public TiposDeUsuario? TipoUsuario { get; set; }  // RELAÇÕES para navegação (objetos relacionados) -  NÃO existe na tabela do SQL
+        public StatusUsuario? Status { get; set; }  // RELAÇÕES para navegação (objetos relacionados) -  NÃO existe na tabela do SQL
     }
 }

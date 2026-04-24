@@ -1,6 +1,6 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class ObrasPorNucleoDTO
+    public class ObrasPorNucleoDTO  // DTO de saída - OUTPUT (sistema devolve)
     {
         public required string Nucleo { get; set; }
         public string? NomeNucleo { get; set; }
