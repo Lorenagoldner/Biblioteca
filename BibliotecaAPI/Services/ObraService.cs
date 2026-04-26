@@ -22,33 +22,14 @@ namespace BibliotecaAPI.Services
             _nucleoRepo = nucleoRepo;
             _generoRepo = generoRepo;
         }
-
-
-        // --------------------------------------------------- CRUD ---------------------------------------------- //
-        // ================================ MÉTODOS DE SERVIÇO PARA GERENCIAR OBRAS =============================== //
-
-
-        // ObraDTO: OUTPUT - DTO de saída (sistema devolve - vai para o utilizador).
         public object GetAll()
         {
             var obras = _repo.GetAll();
 
-            // convertendo (MAPPING): 
-            //   - Model (Obras) → vem do banco;
-            //   - DTO(ObraDTO) → vai para o utilizador.
-            // ✔ Você precisa criar um novo objeto DTO, baseado no Model.
-            /* 
-                | Fluxo | Conversão   |
-                | ----- | ----------- |
-                | GET   | Model → DTO |
-                | POST  | DTO → Model |
-            */
-
             if (obras == null || obras.Count == 0)
                 return new { message = "Nenhuma obra encontrada" };
 
-            return obras.Select(o => new ObraDTO   // *** uso do SELECT para converter cada obra do banco (Model), obras = lista, precisa converter cada item, em um ObraDTO (DTO de saída).
-                                                   // *** GetById(): NÃO precisa de SELECT, porque é apenas 1 item (objeto), não uma lista.
+            return obras.Select(o => new ObraDTO  
             {
                 ObraID = o.ObraID,
                 Titulo = o.Titulo,
@@ -58,10 +39,6 @@ namespace BibliotecaAPI.Services
                 ISBN = o.ISBN
             }).ToList();
         }
-
-
-
-        // ObraDTO: OUTPUT - DTO de saída (sistema devolve - vai para o utilizador).
         public ObraDTO GetById(int id)
         {
             var o = _repo.GetById(id);
@@ -70,7 +47,7 @@ namespace BibliotecaAPI.Services
                 return null;
 
 
-            return new ObraDTO // *** GetById(): NÃO precisa de SELECT, porque é apenas 1 item (objeto), não uma lista.
+            return new ObraDTO 
             {
                 ObraID = o.ObraID,
                 Titulo = o.Titulo,
@@ -81,21 +58,9 @@ namespace BibliotecaAPI.Services
             };
         }
 
-
-        // CriarObraDTO: INPUT - DTO de entrada (o que o utilizador envia).
         public int Add(CriarObraDTO dto)
         {
-            // convertendo (MAPPING): 
-            //   - DTO(CriarObraDTO) → vem do utilizador;
-            //   - Model (Obras) → vai para o banco.
-            // ✔ Você precisa criar um novo objeto Model, baseado no DTO. Você está convertendo DTO → Model.
-            /* 
-                  | Fluxo | Conversão   |
-                  | ----- | ----------- |
-                  | GET   | Model → DTO |
-                  | POST  | DTO → Model |
-            */
-
+        
             var genero = _generoRepo.GetGeneroById(dto.GeneroID);
 
             if (genero == null)
@@ -113,8 +78,6 @@ namespace BibliotecaAPI.Services
             return _repo.Add(obra);
         }
 
-
-        // AtualizarObraDTO: INPUT - DTO de entrada (o que o utilizador envia).
         public void Update(int id, AtualizarObraDTO dto)
         {
             var obra = new Obras
@@ -132,7 +95,6 @@ namespace BibliotecaAPI.Services
 
         public void Delete(int id)
         {
-            // Efeito cascata: 👉 Primeiro apaga exemplares, depois obra.
             var exemplares = _exemplaresRepo.GetAll()
                 .Where(e => e.ObraID == id)
                 .ToList();
@@ -145,11 +107,6 @@ namespace BibliotecaAPI.Services
             _repo.Delete(id);
         }
 
-
-
-        // ---------------- 🔥 NOVO (JOIN) ----------------
-
-        // DTO de saída - OUTPUT (sistema devolve - vai para o utilizador)
         public List<ObraDetalhadaDTO> GetObrasDetalhadas()
         {
             var obras = _repo.GetAll();

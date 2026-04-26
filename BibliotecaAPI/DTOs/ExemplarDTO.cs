@@ -1,6 +1,6 @@
 ﻿namespace BibliotecaAPI.DTOs
 {
-    public class ExemplarDTO  // DTO de saída - OUTPUT (sistema devolve)
+    public class ExemplarDTO  
     {
         public int ExemplaresID { get; set; }
         public int ObraID { get; set; }

@@ -14,9 +14,7 @@ namespace BibliotecaAPI.Repositories
         {
             _generoRepo = generoRepo;
         }
-
-
-        //------------------- MÉTODOS -------------------- //
+        //metodos
         public List<Obras> GetAll()
         {
             string sql = "SELECT * FROM Obras";
