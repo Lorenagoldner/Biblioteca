@@ -3,7 +3,7 @@ using BibliotecaAPI.Repositories;
 
 namespace BibliotecaAPI.Services
 {
-    public class GeneroService : IGeneroService
+    public class GeneroService
     {
        
         private readonly IGeneroRepository _repo;

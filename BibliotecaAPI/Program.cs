@@ -4,7 +4,6 @@ using BibliotecaAPI.Models;
 using BibliotecaAPI.Repositories;
 using BibliotecaAPI.Services;
 using System.Data;
-using BibliotecaAPI.Services;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -15,22 +14,22 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
-builder.Services.AddScoped<IObraService, ObraService>();
+builder.Services.AddScoped<ObraService>();
 builder.Services.AddScoped<IObrasRepository, ObrasRepository>();
 
 builder.Services.AddScoped<INucleoRepository, NucleoRepository>();
-builder.Services.AddScoped<INucleoService, NucleoService>();
+builder.Services.AddScoped<NucleoService>();
 
-builder.Services.AddScoped<IGeneroService, GeneroService>();
+builder.Services.AddScoped<GeneroService>();
 builder.Services.AddScoped<IGeneroRepository, GeneroRepository>();
 
-builder.Services.AddScoped<IExemplaresService, ExemplaresService>();
+builder.Services.AddScoped<ExemplaresService>();
 builder.Services.AddScoped<IExemplaresRepository, ExemplaresRepository>();
 
 builder.Services.AddScoped<IEstatisticasP2Repository, EstatisticasP2Repository>();
-builder.Services.AddScoped<IEstatisticasP2Service, EstatisticasP2Service>();
+builder.Services.AddScoped<EstatisticasP2Service>();
 
-builder.Services.AddScoped<IImagemLivroService, ImagemLivroService>();
+builder.Services.AddScoped<ImagemLivroService>();
 builder.Services.AddScoped<IImagemLivroRepository, ImagemLivroRepository>();
 
 Biblioteca.ADONet.DALPro.ConnectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -60,15 +59,15 @@ app.UseRouting();
 
 //Endpoints para Obras
 
-app.MapGet("/api/obras/buscar", (IObraService service) =>
+app.MapGet("/api/obras/buscar", (ObraService service) =>
 {
     return Results.Ok(service.GetAll());
 });
 
 
-app.MapGet("/api/obras/buscar/{id}", (int id, IObraService service) =>
+app.MapGet("/api/obras/buscar/{obraId}", (int obraId, ObraService service) =>
 {
-    var obra = service.GetById(id);
+    var obra = service.GetById(obraId);
 
     if (obra == null)
         return Results.NotFound(new { message = "Obra não encontrada" });
@@ -77,7 +76,7 @@ app.MapGet("/api/obras/buscar/{id}", (int id, IObraService service) =>
 });
 
 
-app.MapPost("/api/obras/criar", (CriarObraDTO dto, IObraService service) =>
+app.MapPost("/api/obras/criar", (CriarObraDTO dto, ObraService service) =>
 {
     var id = service.Add(dto);
 
@@ -89,62 +88,66 @@ app.MapPost("/api/obras/criar", (CriarObraDTO dto, IObraService service) =>
 });
 
 
-app.MapPut("/api/obras/atualizar/{id}", (int id, AtualizarObraDTO dto, IObraService service) =>
+app.MapPut("/api/obras/atualizar/{obraId}", (int obraId, AtualizarObraDTO dto, ObraService service) =>
 {
-    service.Update(id, dto);
-    return Results.Ok();
+    if (dto.GeneroID <= 0)
+    {
+        return Results.BadRequest(new
+        {
+            message = "Género é obrigatório"
+        });
+    }
+
+    service.Update(obraId, dto);
+
+    return Results.Ok(new
+    {
+        message = "Obra atualizada com sucesso"
+    });
 });
 
 
-app.MapDelete("/api/obras/deletar/{id}", (int id, IObraService service) =>
+app.MapDelete("/api/obras/deletar/{obraId}", (int obraId, ObraService service) =>
 {
-    service.Delete(id);
-    return Results.Ok();
+    var msg = service.Delete(obraId);
+    return Results.Ok(new { message = msg });
 });
 
 
-app.MapGet("/api/obras/detalhadas", (IObraService service) =>
+app.MapGet("/api/obras/detalhadas", (ObraService service) =>
 {
     return Results.Ok(service.GetObrasDetalhadas());
 });
 
 
-app.MapGet("/api/obras/pesquisa", (string texto, IObraService service) =>
+app.MapGet("/api/obras/pesquisa", (string texto, ObraService service) =>
 {
-var resultado = service.PesquisarObra(texto);
+    var resultado = service.PesquisarObra(texto);
 
-
-if (resultado == null || !resultado.Any())
-
-{
-
-    return Results.NotFound(new
+    if (resultado == null || !resultado.Any())
     {
+        return Results.NotFound(new
+        {
+            mensagem = "Nenhuma obra encontrada"
+        });
+    }
 
-        mensagem = "Nenhuma obra encontrada"
+    return Results.Ok(new
+    {
+        mensagem = "Obra(s) encontrada(s) com sucesso"
     });
-
-}
-
-
-return Results.Ok(new
-{
-
-    mensagem = "Obra(s) encontrada(s) com sucesso"
 });
 
-});
 
 //Endpoints para Exemplares
 
-app.MapGet("/api/exemplares/buscar", (IExemplaresService service) =>
+app.MapGet("/api/exemplares/buscar", (ExemplaresService service) =>
 {
     return Results.Ok(service.GetAll());
 });
 
 
-
-app.MapPost("/api/exemplares/criar", (CriarExemplarDTO dto, IExemplaresService service) =>
+app.MapPost("/api/exemplares/criar", (CriarExemplarDTO dto, ExemplaresService service) =>
 {
     var exemplar = new Exemplares
     {
@@ -163,45 +166,77 @@ app.MapPost("/api/exemplares/criar", (CriarExemplarDTO dto, IExemplaresService s
 });
 
 
-app.MapPut("/api/exemplares/transferir", (int id, int nucleoId, IExemplaresService service) =>
+app.MapPut("/api/exemplares/atualizar/{exemplarId}",
+(int exemplarId, CriarExemplarDTO dto, ExemplaresService service) =>
 {
-    service.TransferirExemplarParaNucleo(id, nucleoId);
-    return Results.Ok(new { message = "Transferência feita" });
-});
+    try
+    {
+        service.AtualizarExemplar(exemplarId, dto);
+        return Results.Ok(new { message = "Exemplar atualizado com sucesso" });
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new { erro = ex.Message });
+    }
+})
+.Produces(200)
+.Produces(400);
 
 
-app.MapPut("/api/exemplares/atualizar", (Exemplares exemplar, IExemplaresService service) =>
+app.MapDelete("/api/exemplares/deletar/{exemplarId}", (int exemplarId, ExemplaresService service) =>
 {
-    service.AtualizarExemplar(exemplar);
-    return Results.Ok(new { message = "Exemplar atualizado com sucesso" });
-});
-
-
-app.MapDelete("/api/exemplares/{id}", (int id, IExemplaresService service) =>
-{
-    service.EliminarExemplar(id);
+    service.EliminarExemplar(exemplarId);
     return Results.Ok(new { message = "Exemplar eliminado com sucesso" });
 });
 
 
-app.MapPut("/api/exemplares/{id}/disponibilizar", (int id, IExemplaresService service) =>
+app.MapPut("/api/exemplares/{exemplarId}/transferir/{nucleoDestinoId}", (int exemplarId, int nucleoDestinoId, ExemplaresService service) =>
 {
-    service.Disponibilizar(id);
+    try
+    {
+        service.TransferirExemplarParaNucleo(exemplarId, nucleoDestinoId);
+
+        return Results.Ok(new
+        {
+            mensagem = "Transferência feita com sucesso"
+        });
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(new
+        {
+            mensagem = ex.Message
+        });
+    }
+})
+.Produces(200)
+.Produces(400);
+
+
+app.MapPut("/api/exemplares/{exemplarId}/disponibilizar", (int exemplarId, ExemplaresService service) =>
+{
+    service.Disponibilizar(exemplarId);
     return Results.Ok(new { message = "Exemplar disponível" });
 });
 
 
-app.MapPut("/api/exemplares/{id}/indisponibilizar", (int id, IExemplaresService service) =>
+app.MapPut("/api/exemplares/{exemplarId}/indisponibilizar", (int exemplarId, ExemplaresService service) =>
 {
-    service.Indisponibilizar(id);
+    service.Indisponibilizar(exemplarId);
     return Results.Ok(new { message = "Exemplar indisponível" });
 });
 
 
 //Endpoints para Núcleos
-app.MapGet("/api/nucleos/{id}", (int id, INucleoRepository repo) =>
+app.MapGet("/api/nucleos/buscar", (NucleoService service) =>
 {
-    var nucleo = repo.GetNucleoById(id);
+    return Results.Ok(service.GetAll());
+});
+
+
+app.MapGet("/api/nucleos/buscar/{nucleoId}", (int nucleoId, INucleoRepository repo) =>
+{
+    var nucleo = repo.GetNucleoById(nucleoId);
 
     if (nucleo == null)
         return Results.NotFound(new { message = "Núcleo não encontrado" });
@@ -210,13 +245,7 @@ app.MapGet("/api/nucleos/{id}", (int id, INucleoRepository repo) =>
 });
 
 
-app.MapGet("/api/nucleos", (INucleoService service) =>
-{
-    return Results.Ok(service.GetAll());
-});
-
-
-app.MapPost("/api/nucleos", (Nucleo nucleo, INucleoService service) =>
+app.MapPost("/api/nucleos/criar", (Nucleo nucleo, NucleoService service) =>
 {
     service.Add(nucleo);
 
@@ -227,7 +256,7 @@ app.MapPost("/api/nucleos", (Nucleo nucleo, INucleoService service) =>
 });
 
 
-app.MapPut("/api/nucleos", (Nucleo nucleo, INucleoService service) =>
+app.MapPut("/api/nucleos/atualizar", (Nucleo nucleo, NucleoService service) =>
 {
     service.Update(nucleo);
 
@@ -238,27 +267,23 @@ app.MapPut("/api/nucleos", (Nucleo nucleo, INucleoService service) =>
 });
 
 
-app.MapDelete("/api/nucleos/{id}", (int id, INucleoService service) =>
+app.MapDelete("/api/nucleos/delete/{nucleoId}", (int nucleoId, NucleoService service) =>
 {
-    service.Delete(id);
-
-    return Results.Ok(new
-    {
-        message = "Núcleo eliminado com sucesso"
-    });
+    return Results.Ok(service.Delete(nucleoId));
 });
 
 
-app.MapGet("/api/exemplares/nucleo/{id}", (int id, IExemplaresService service) =>
+// id Nucleo: Exemplares por Núcleo.
+app.MapGet("/api/exemplares/nucleo/{nucleoId}", (int nucleoId, ExemplaresService service) =>
 {
-    var result = service.GetByNucleo(id);
+    var result = service.GetByNucleo(nucleoId);
     return Results.Ok(result);
 });
 
-
-app.MapGet("/api/exemplares/nucleo/{id}/por-obra", (int id, IExemplaresService service) =>
+// id Nucleo: TOTAL Exemplares por Obra, por Núcleo.
+app.MapGet("/api/exemplares/nucleo/{nucleoId}/total-exemplares-por-obra-por-nucleo", (int nucleoId, ExemplaresService service) =>
 {
-    var result = service.GetByNucleo(id);
+    var result = service.GetByNucleo(nucleoId);
 
     var resumo = result
         .GroupBy(x => new { x.ObraID, x.TituloObra })
@@ -272,9 +297,10 @@ app.MapGet("/api/exemplares/nucleo/{id}/por-obra", (int id, IExemplaresService s
     return Results.Ok(resumo);
 });
 
+
 //Endpoints para Imagens de Obras
 app.MapPost("/api/obras/{obraId}/imagem",
-(int obraId, IFormFile file, IImagemLivroService service) =>
+(int obraId, IFormFile file, ImagemLivroService service) =>
 {
     if (file == null || file.Length == 0)
         return Results.BadRequest(new { message = "Ficheiro inválido" });
@@ -290,7 +316,7 @@ app.MapPost("/api/obras/{obraId}/imagem",
 
 
 app.MapGet("/api/obras/{obraId}/imagem",
-(int obraId, IImagemLivroService service) =>
+(int obraId, ImagemLivroService service) =>
 {
     var img = service.Get(obraId);
 
@@ -481,7 +507,7 @@ app.MapGet("/estatisticas/top10-mes-anterior", (EstatisticasService service) =>
 
 app.MapGet("/api/stats/top-obras",
 
-    (DateTime dataInicio, DateTime dataFim, IEstatisticasP2Service service) =>
+    (DateTime dataInicio, DateTime dataFim, EstatisticasP2Service service) =>
     {
         return Results.Ok(service.TopObras(dataInicio, dataFim));
     })
@@ -489,14 +515,14 @@ app.MapGet("/api/stats/top-obras",
 
 
 app.MapGet("/api/stats/nucleos",
-    (DateTime dataInicio, DateTime dataFim, IEstatisticasP2Service service) =>
+    (DateTime dataInicio, DateTime dataFim, EstatisticasP2Service service) =>
     {
         return Results.Ok(service.Nucleos(dataInicio, dataFim));
     })
 .WithDescription("Formato das datas: yyyy-MM-dd (ex: 2026-01-01)");
 
 
-app.MapGet("/api/stats/generos", (IEstatisticasP2Service service) =>
+app.MapGet("/api/stats/generos", (EstatisticasP2Service service) =>
 {
     return Results.Ok(service.Generos());
 });

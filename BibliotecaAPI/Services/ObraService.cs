@@ -5,14 +5,13 @@ using System.Reflection;
 
 namespace BibliotecaAPI.Services
 {
-    public class ObraService : IObraService
+    public class ObraService 
     {
         // Injeção de dependência do repositório:
         private readonly IObrasRepository _repo;
         private readonly IExemplaresRepository _exemplaresRepo;
         private readonly INucleoRepository _nucleoRepo;
         private readonly IGeneroRepository _generoRepo;
-        private readonly IImagemLivroService _imagemService;
 
         // Cosntrutor para injetar os repositórios correspondentes:
         public ObraService(IObrasRepository repo, IExemplaresRepository exemplaresRepo, INucleoRepository nucleoRepo, IGeneroRepository generoRepo)
@@ -29,14 +28,18 @@ namespace BibliotecaAPI.Services
             if (obras == null || obras.Count == 0)
                 return new { message = "Nenhuma obra encontrada" };
 
-            return obras.Select(o => new ObraDTO  
-            {
-                ObraID = o.ObraID,
-                Titulo = o.Titulo,
-                Autor = o.Autor,
-                Genero = o.GeneroID.ToString(),
-                Descricao = o.Descricao,
-                ISBN = o.ISBN
+            return obras.Select(o =>
+            {                
+                return new ObraDTO
+                {
+                    ObraID = o.ObraID,
+                    Titulo = o.Titulo,
+                    Autor = o.Autor,
+                    GeneroID = o.GeneroID,
+                    Genero = _generoRepo.GetGeneroById(o.GeneroID)?.Nome,
+                    Descricao = o.Descricao,
+                    ISBN = o.ISBN
+                };
             }).ToList();
         }
         public ObraDTO GetById(int id)
@@ -46,13 +49,13 @@ namespace BibliotecaAPI.Services
             if (o == null)
                 return null;
 
-
             return new ObraDTO 
             {
                 ObraID = o.ObraID,
                 Titulo = o.Titulo,
                 Autor = o.Autor,
-                Genero = o.GeneroID.ToString(),
+                GeneroID = o.GeneroID,
+                Genero = _generoRepo.GetGeneroById(o.GeneroID)?.Nome,
                 Descricao = o.Descricao,
                 ISBN = o.ISBN
             };
@@ -85,7 +88,7 @@ namespace BibliotecaAPI.Services
                 ObraID = id,
                 Titulo = dto.Titulo,
                 Autor = dto.Autor,
-                GeneroID = dto.GeneroID,
+                GeneroID = dto.GeneroID ?? 0,
                 Descricao = dto.Descricao
             };
 
@@ -93,19 +96,34 @@ namespace BibliotecaAPI.Services
         }
 
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
-            var exemplares = _exemplaresRepo.GetAll()
-                .Where(e => e.ObraID == id)
-                .ToList();
+            var obra = _repo.GetById(id);
 
-            foreach (var ex in exemplares)
+            if (obra == null)
+                return "Obra não encontrada.";
+
+            try
             {
-                _exemplaresRepo.DeleteExemplar(ex.ExemplaresID);
-            }
+                var exemplares = _exemplaresRepo.GetAll()
+                    .Where(e => e.ObraID == id)
+                    .ToList();
 
-            _repo.Delete(id);
+                foreach (var ex in exemplares)
+                {
+                    _exemplaresRepo.DeleteExemplar(ex.ExemplaresID);
+                }
+
+                _repo.Delete(id);
+
+                return "Obra eliminada com sucesso";
+            }
+            catch (Exception)
+            {
+                return "Não é possível eliminar esta obra porque existem empréstimos associados aos exemplares.";
+            }
         }
+
 
         public List<ObraDetalhadaDTO> GetObrasDetalhadas()
         {
@@ -126,7 +144,7 @@ namespace BibliotecaAPI.Services
                     ObraID = o.ObraID,
                     Titulo = o.Titulo,
                     Autor = o.Autor,
-                    Genero = o.GeneroID.ToString(),
+                    Genero = _generoRepo.GetGeneroById(o.GeneroID)?.Nome,
                     Descricao = o.Descricao,
                     ISBN = o.ISBN,
                     Nucleo = nucleo?.Nome,

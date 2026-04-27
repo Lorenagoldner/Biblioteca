@@ -5,7 +5,7 @@ using BibliotecaAPI.Repositories;
 
 namespace BibliotecaAPI.Services
 {
-    public class ExemplaresService : IExemplaresService
+    public class ExemplaresService
     {
         private readonly IExemplaresRepository _repo;
         private readonly IObrasRepository _obraRepo;
@@ -58,22 +58,29 @@ namespace BibliotecaAPI.Services
         }
 
 
-        public void AtualizarExemplar(Exemplares exemplar)
+        public void AtualizarExemplar(int id, CriarExemplarDTO dto)
         {
-            if (exemplar.NucleoID < 1 || exemplar.NucleoID > 5)
+            if (dto.NucleoID < 1 || dto.NucleoID > 5)
                     throw new ArgumentException("NucleoID inválido (1 a 5)");
 
             // 1. VALIDAÇÃO BÁSICA
-            if (exemplar.ObraID <= 0)
+            if (dto.ObraID <= 0)
                 throw new Exception("Obra inválida");
 
-            if (exemplar.NucleoID <= 0)
+            if (dto.NucleoID <= 0)
                 throw new Exception("Núcleo inválido");
 
 
-            if (exemplar.ObraID <= 0 || exemplar.NucleoID <= 0)
+            if (dto.ObraID <= 0 || dto.NucleoID <= 0)
                 throw new Exception("Dados inválidos");
 
+            var exemplar = new Exemplares
+            {
+                ExemplaresID = id,
+                ObraID = dto.ObraID,
+                NucleoID = dto.NucleoID,
+                Disponivel = dto.Disponivel
+            };
 
             _repo.UpdateExemplar(exemplar);
         }
@@ -100,12 +107,9 @@ namespace BibliotecaAPI.Services
             if (nucleoDestino == null)
                 throw new Exception("Núcleo destino não existe");
 
-            if (nucleoOrigem == nucleoDestinoId)
-                throw new Exception("O exemplar já está neste núcleo");
-
+            
             int totalNoNucleo = _repo.ContarExemplares(obraId, nucleoOrigem);
 
-            Console.WriteLine($"DEBUG: totalNoNucleo = {totalNoNucleo}");
 
             if (totalNoNucleo - 1 < 2)  
                 throw new Exception("Não é possível transferir. O núcleo deve manter pelo menos 2 exemplares desta obra.");

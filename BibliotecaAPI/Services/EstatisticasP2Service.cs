@@ -3,7 +3,7 @@ using BibliotecaAPI.Repositories;
 
 namespace BibliotecaAPI.Services
 {
-    public class EstatisticasP2Service : IEstatisticasP2Service
+    public class EstatisticasP2Service
     {
         private readonly IEstatisticasP2Repository _repo;
 

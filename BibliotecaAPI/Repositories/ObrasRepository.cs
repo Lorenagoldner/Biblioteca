@@ -7,13 +7,6 @@ namespace BibliotecaAPI.Repositories
 {
     public class ObrasRepository : IObrasRepository
     {
-        private readonly IGeneroRepository _generoRepo;
-
-        // Construtor:
-        public ObrasRepository(IGeneroRepository generoRepo)
-        {
-            _generoRepo = generoRepo;
-        }
         //metodos
         public List<Obras> GetAll()
         {

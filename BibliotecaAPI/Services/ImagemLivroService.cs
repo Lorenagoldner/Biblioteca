@@ -3,7 +3,7 @@ using BibliotecaAPI.Repositories;
 
 namespace BibliotecaAPI.Services
 {
-    public class ImagemLivroService : IImagemLivroService
+    public class ImagemLivroService
     {
         private readonly IImagemLivroRepository _repo;
 

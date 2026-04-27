@@ -3,13 +3,15 @@ using BibliotecaAPI.Repositories;
 
 namespace BibliotecaAPI.Services
 {
-    public class NucleoService : INucleoService
+    public class NucleoService 
     {
         private readonly INucleoRepository _repo;
+        private readonly IExemplaresRepository _exemplaresRepo;
 
-        public NucleoService(INucleoRepository repo)
+        public NucleoService(INucleoRepository repo, IExemplaresRepository exemplaresRepo)
         {
             _repo = repo;
+            _exemplaresRepo = exemplaresRepo;
         }
 
         public List<Nucleo> GetAll()
@@ -38,9 +40,17 @@ namespace BibliotecaAPI.Services
             _repo.UpdateNucleo(nucleo);
         }
 
-        public void Delete(int id)
+        public string Delete(int id)
         {
+            var temExemplares = _exemplaresRepo.GetAll()
+           .Any(e => e.NucleoID == id);
+
+            if (temExemplares)
+                return "Não é possível eliminar este Núcleo porque existem exemplares associados.";
+
             _repo.DeleteNucleo(id);
+            return "Núcleo eliminado com sucesso";
+
         }
 
         public bool Exists(int id)
